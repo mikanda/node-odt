@@ -4,7 +4,7 @@
   "description": "A node tool to work with OpenDocument text files.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test"
   },
   "repository": "",
   "keywords": [
@@ -22,5 +22,9 @@
     "adm-zip": "~0.4.3",
     "archiver": "~0.4.3",
     "colors": "~0.6.0-1"
+  },
+  "devDependencies": {
+    "should": "~1.2.2",
+    "mocha": "~1.10.0"
   }
 }

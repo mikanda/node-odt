@@ -1,0 +1,73 @@
+#!/usr/bin/node
+
+/**
+ * Module dependencies.
+ */
+
+var fs = require('fs')
+  , program = require('commander')
+  , odt = require('..')
+  , template = odt.template
+  , readFile = fs.readFileSync
+  , createWriteStream = fs.createWriteStream;
+require('colors');
+
+// usage
+
+program
+  .version(require('../package').version)
+  .usage('[options] <template>')
+  .option(
+    '-o, --output <path>',
+    'the path to write the zip file to',
+    '/dev/null'
+  )
+  .option('-v, --values <path>', 'the path to the values json file');
+
+// parse command line
+
+program.parse(process.argv);
+var doc = program.args[0];
+var values = program.values;
+
+// check required options
+
+if (!program.values) {
+  error('no values file given!');
+  process.exit(1);
+}
+if (!program.args[0]) {
+  error('no template given!');
+  process.exit(1);
+}
+
+// apply values
+
+values = JSON.parse(readFile(values));
+template(doc)
+  .apply(values)
+  .on('error', function(err){
+    throw err;
+  })
+  .on('end', writeArchive);
+
+// write archive to disk.
+
+function writeArchive(archive){
+  archive.pipe(createWriteStream(program.output))
+  archive.finalize(function(err){
+    if (err) throw err;
+    console.log();
+    console.log('  document written to '.cyan + program.output.bold);
+    console.log();
+  });
+}
+
+// prints a nicely formatted error message
+
+function error(message){
+  console.error();
+  console.error('  ' + message.red);
+  console.error();
+}
+/* vim:set ft=javascript: */

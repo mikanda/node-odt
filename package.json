@@ -1,0 +1,26 @@
+{
+  "name": "odt",
+  "version": "0.0.1",
+  "description": "A node tool to work with OpenDocument text files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "node",
+    "odt",
+    "odf"
+  ],
+  "author": "Dominik Burgdörfer <dominik.burgdoerfer@mikanda.de>",
+  "license": "BSD",
+  "dependencies": {
+    "unzip": "~0.1.7",
+    "pipette": "~0.9.3",
+    "libxmljs": "~0.8.1",
+    "async": "~0.2.9",
+    "adm-zip": "~0.4.3",
+    "archiver": "~0.4.3",
+    "colors": "~0.6.0-1"
+  }
+}

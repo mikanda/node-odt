@@ -21,7 +21,6 @@ var zlib = require('zlib')
   , Blip = pipette.Blip
   , parseXmlString = libxmljs.parseXmlString
   , createReadStream = fs.createReadStream
-  , createWriteStream = fs.createWriteStream
   , chain = async.waterfall
   , inherits = util.inherits;
 
@@ -66,8 +65,7 @@ inherits(Template, EventEmitter);
  */
 
 Template.prototype.apply = function(values){
-  var archive = this.archive
-    , append = this.append.bind(this);
+  var append = this.append.bind(this);
 
   // parse the zip file
 
@@ -120,8 +118,8 @@ Template.prototype.append = function(options){
       if (done) done(null, stream);
       if (--template.nentries === 0) emit('end', archive);
     });
-  }
-}
+  };
+};
 
 /**
  * Parses the content.xml file of the document.
@@ -137,7 +135,7 @@ function parse(stream){
     sink.on('data', function(data){
       done(null, parseXmlString(data.toString()));
     });
-  }
+  };
 }
 
 /**

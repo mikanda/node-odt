@@ -54,7 +54,7 @@ template(doc)
 // write archive to disk.
 
 function writeArchive(archive){
-  archive.pipe(createWriteStream(program.output))
+  archive.pipe(createWriteStream(program.output));
   archive.finalize(function(err){
     if (err) throw err;
     console.log();

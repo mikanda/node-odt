@@ -1,0 +1,44 @@
+{
+
+  /* Enforcing options */
+
+  "bitwise": false,
+  "camelcase": true,
+  "curly": false,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": false,
+  "indent": 2,
+  "latedef": false,
+  "newcap": true,
+  "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "plusplus": false,
+  /* "quotmark": "single", */
+  "undef": true,
+  "unused": "strict",
+  "strict": false,
+  "trailing": true,
+  "maxdepth": 2,
+  "maxlen": 79,
+
+  /* Relaxing options */
+
+  "asi": false,
+  "boss": false,
+  "debug": false,
+  "eqnull": true,
+  "esnext": false,
+  "evil": false,
+  "expr": false,
+  "funcscope": false,
+  "globalstrict": false,
+  "iterator": false,
+  "lastsemic": false,
+  "laxcomma": true,
+
+  /* Enviroments */
+
+  "node": true
+}

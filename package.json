@@ -6,7 +6,10 @@
   "scripts": {
     "test": "make test"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/domachine/node-odt.git"
+  },
   "keywords": [
     "node",
     "odt",
@@ -26,5 +29,10 @@
   "devDependencies": {
     "should": "~1.2.2",
     "mocha": "~1.10.0"
+  },
+  "readmeFilename": "README.md",
+  "directories": {
+    "example": "examples",
+    "test": "test"
   }
 }

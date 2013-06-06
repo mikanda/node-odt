@@ -4,12 +4,11 @@
  */
 
 var odt = require('..')
-  , fs = require('fs')
   , path = require('path')
-  , should = require('should')
   , pipette = require('pipette')
   , join = path.join
   , Sink = pipette.Sink;
+require('should');
 
 /**
  * Tests.
@@ -33,7 +32,7 @@ describe('Template', function(){
             if (err) done(err);
             bytes.should.equal(estimatedSize);
           });
-          doc.on('end', done);
+          sink.on('end', done);
         })
         .apply(require('../examples/values'));
     });

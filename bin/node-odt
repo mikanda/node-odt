@@ -55,10 +55,15 @@ template(doc)
 
 function writeArchive(archive){
   archive.pipe(createWriteStream(program.output));
-  archive.finalize(function(err){
+  archive.finalize(function(err, bytes){
     if (err) throw err;
     console.log();
-    console.log('  document written to '.cyan + program.output.bold);
+    console.log([
+      '  ',
+      bytes.toString().bold,
+      ' bytes written to '.cyan,
+      program.output.bold
+    ].join(''));
     console.log();
   });
 }

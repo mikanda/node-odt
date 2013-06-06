@@ -17,18 +17,20 @@ var zlib = require('zlib')
   , async = require('async')
   , archiver = require('archiver')
   , EventEmitter = events.EventEmitter
+  , createReadStream = fs.createReadStream
+  , inherits = util.inherits
   , Sink = pipette.Sink
   , Blip = pipette.Blip
   , parseXmlString = libxmljs.parseXmlString
-  , createReadStream = fs.createReadStream
   , chain = async.waterfall
-  , inherits = util.inherits;
+  , each = async.eachSeries;
 
 /**
  * Module exports.
  */
 
 exports.template = createTemplate;
+exports.template.values = values;
 
 /**
  * Simply instantiates a new template instance.
@@ -51,6 +53,7 @@ function Template(path){
 
   this.nentries = new AdmZip(path).getEntries().length;
   this.archive = archiver('zip');
+  this.handlers = [];
 }
 
 // inherit from event emitter
@@ -64,40 +67,111 @@ inherits(Template, EventEmitter);
  * @emit end {Archive} The read stream of the finished document.
  */
 
-Template.prototype.apply = function(values){
-  var append = this.append.bind(this);
+Template.prototype.apply = function(handler){
+
+  // provide a shortcut for simple value applying
+
+  if (typeof handler === 'function') {
+    this.handlers.push(handler);
+  } else {
+    this.handlers.push(values(handler));
+  }
+
+  // if the template is already running the action is complete
+
+  if (this.processing) return this;
 
   // parse the zip file
 
   this
     .stream
     .pipe(unzip.Parse())
-    .on('entry', function(entry){
-      if (entry.path === 'content.xml') {
-
-        // the content is processed to apply the values
-
-        chain(
-          [
-            parse(entry),
-            apply(values),
-            append({ name: 'content.xml' })
-          ]
-        );
-      } else if (entry.path === 'mimetype') {
-
-        // mimetype needs to be added uncompressed.
-
-        var appendMime = append({
-          name: 'mimetype',
-          zlib: { level: zlib.Z_NO_COMPRESSION }
-        });
-        appendMime(entry);
-      } else {
-        append({ name: entry.path })(entry);
-      }
-    });
+    .on('entry', this.processEntry.bind(this));
+  this.processing = true;
   return this;
+};
+
+/**
+ * Processes the given entry.
+ *
+ * @param {Stream} entry The entry to process.
+ * @api private
+ */
+
+Template.prototype.processEntry = function(entry){
+
+  // dispatch the entry path and take the appropriate actions
+
+  if (entry.path === 'content.xml') {
+    this.processContent(entry);
+  } else if (entry.path === 'mimetype') {
+
+    // mimetype needs to be added uncompressed.
+
+    this.appendMime(entry);
+  } else {
+    this.append({ name: entry.path })(entry);
+  }
+};
+
+/**
+ * Parses the content and applies the handlers.
+ *
+ * @param {Stream} stream The to the content.
+ * @api private
+ */
+
+Template.prototype.processContent = function(stream){
+  chain(
+    [
+      parse(stream),
+      this.applyHandlers(),
+      this.append({ name: 'content.xml' })
+    ]
+  );
+};
+
+/**
+ * Apply the content to the various installed handlers.
+ *
+ * @return {Function} function(content, done).
+ * @api private
+ */
+
+Template.prototype.applyHandlers = function(){
+  var handlers = this.handlers;
+  return function(content, done){
+    each(
+      handlers,
+      function(handler, next){
+
+        // apply the handlers to the content
+
+        handler(content, next);
+      },
+      function(err){
+        if (err) return done(err);
+
+        // serialize the xml data into a stream and return it
+
+        done(null, new Blip(content.toString()));
+      }
+    );
+  };
+};
+
+/**
+ * The mimetype file is a special case since it is added uncompressed.  This
+ * function does this.
+ */
+
+Template.prototype.appendMime = function(stream, done){
+  var appendMime;
+  appendMime = this.append({
+    name: 'mimetype',
+    zlib: { level: zlib.Z_NO_COMPRESSION }
+  });
+  appendMime(stream, done);
 };
 
 /**
@@ -141,23 +215,23 @@ function parse(stream){
 /**
  * Applies an object of values to the odf template.
  *
- * @param {Object} values The values to apply.
+ * @param {Object} dict The values to apply.
  * @return {Function} function(xml, done).
  * @api private
  */
 
-function apply(values){
+function values(dict){
   return function(xml, done){
     xml
       .find("//*[name()='text:user-field-decl']")
       .forEach(function(decl){
         var name = decl.attr('name').value()
           , type = decl.attr('value-type').value();
-        if ((values[type] || {})[name]) {
+        if ((dict[type] || {})[name]) {
 
           // replace the value with the one of the dictionary
 
-          decl.attr(type + '-value').value(values[type][name]);
+          decl.attr(type + '-value').value(dict[type][name]);
         }
       });
 

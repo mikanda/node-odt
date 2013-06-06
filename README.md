@@ -76,3 +76,10 @@ e.g.
   ...
 }
 ```
+
+#### `.apply(handler : Function)`
+
+Registers a handler to modify the content.  `handler` is a function of the form
+`function(content, done)` while `content` is the parsed xml data of the
+`content.xml` file in the document archive.  `done` is a `function` which needs
+to be called upon completion.

@@ -7,9 +7,9 @@ var odt = require('..')
   , fs = require('fs')
   , path = require('path')
   , should = require('should')
+  , pipette = require('pipette')
   , join = path.join
-  , unlink = fs.unlinkSync
-  , stat = fs.statSync;
+  , Sink = pipette.Sink;
 
 /**
  * Tests.
@@ -27,19 +27,13 @@ describe('Template', function(){
         .template(join(__dirname, '../examples/test-template.ott'))
         .on('error', done)
         .on('end', function(doc){
-          var outputFilename = join(__dirname, '../test.odt')
-            , output = fs.createWriteStream(outputFilename)
-            , estimatedSize = 10582;
-          doc.pipe(output);
+          var estimatedSize = 10582
+            , sink = new Sink(doc);
           doc.finalize(function (err, bytes) {
             if (err) done(err);
             bytes.should.equal(estimatedSize);
           });
-          output.on('close', function(){
-            stat(outputFilename).size.should.equal(estimatedSize);
-            unlink(outputFilename);
-            done();
-          });
+          doc.on('end', done);
         })
         .apply(require('../examples/values'));
     });

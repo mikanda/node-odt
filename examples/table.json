@@ -1,0 +1,6 @@
+{
+  "Tabelle1": [
+    { "key": "Schlüssel 1", "value": "Wert 1" },
+    { "key": "Schlüssel 2", "value": "Wert 2" }
+  ]
+}

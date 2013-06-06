@@ -22,17 +22,18 @@ program
     'the path to write the zip file to',
     '/dev/null'
   )
-  .option('-v, --values <path>', 'the path to the values json file');
+  .option('-v, --values <path>', 'the path to the values json file')
+  .option('-t, --table <path>', 'the path to a table json file');
 
 // parse command line
 
 program.parse(process.argv);
 var doc = program.args[0];
-var values = program.values;
+var values = program.values || program.table;
 
 // check required options
 
-if (!program.values) {
+if (!values) {
   error('no values file given!');
   process.exit(1);
 }
@@ -41,19 +42,30 @@ if (!program.args[0]) {
   process.exit(1);
 }
 
-// apply values
-
-values = JSON.parse(readFile(values));
-var outputStream = createWriteStream(program.output);
-
 // the size of the document is available after rendering
 
 var documentSize;
 
+// apply values
+
+var handlers = [];
+var values;
+if (program.table) {
+  values = JSON.parse(readFile(program.table));
+  handlers.push(template.table(values));
+} else {
+  values = JSON.parse(readFile(program.values));
+  handlers.push(template.values(values));
+}
+var outputStream = createWriteStream(program.output);
+
 // render the document
 
-template(doc)
-  .apply(values)
+var templateInstance = template(doc);
+handlers.forEach(function(handler){
+  templateInstance.apply(handler);
+});
+templateInstance
   .finalize(function(bytes){
     documentSize = bytes;
   })

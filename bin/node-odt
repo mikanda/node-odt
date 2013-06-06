@@ -44,29 +44,36 @@ if (!program.args[0]) {
 // apply values
 
 values = JSON.parse(readFile(values));
+var outputStream = createWriteStream(program.output);
+
+// the size of the document is available after rendering
+
+var documentSize;
+
+// render the document
+
 template(doc)
   .apply(values)
+  .finalize(function(bytes){
+    documentSize = bytes;
+  })
   .on('error', function(err){
     throw err;
   })
-  .on('end', writeArchive);
+  .pipe(outputStream)
+  .on('close', function(){
 
-// write archive to disk.
+    // print rendering stats
 
-function writeArchive(archive){
-  archive.pipe(createWriteStream(program.output));
-  archive.finalize(function(err, bytes){
-    if (err) throw err;
     console.log();
     console.log([
       '  ',
-      bytes.toString().bold,
+      documentSize.toString().bold,
       ' bytes written to '.cyan,
       program.output.bold
     ].join(''));
     console.log();
   });
-}
 
 // prints a nicely formatted error message
 

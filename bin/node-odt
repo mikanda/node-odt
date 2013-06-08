@@ -23,7 +23,8 @@ program
     '/dev/null'
   )
   .option('-v, --values <path>', 'the path to the values json file')
-  .option('-t, --table <path>', 'the path to a table json file');
+  .option('-t, --table <path>', 'the path to a table json file')
+  .option('-c, --print-content', 'print the content after generation');
 
 // parse command line
 
@@ -56,6 +57,16 @@ if (program.table) {
 } else {
   values = JSON.parse(readFile(program.values));
   handlers.push(template.values(values));
+}
+
+if (program.printContent) {
+
+  // print the xml for test capabilities.
+
+  handlers.push(function(xml, done){
+    console.log(xml.toString());
+    done();
+  });
 }
 var outputStream = createWriteStream(program.output);
 

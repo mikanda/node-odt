@@ -119,3 +119,29 @@ Pipes the archive to `stream`.
 
 Finalizes the output and calls `done(size)`. `size` is the size of the
 resulting document.
+
+## Bundled handlers
+
+### Table handler
+
+This handler applies a table template to a table defined by *libreoffice*.
+
+*Warning: This part of the code is yet pretty unstable and might be changed in
+future.  Use it carefully.*
+
+#### Usage
+
+```js
+var odt = require('odt')
+  , table = require('odt/handler').table;
+odt
+  .template('mytemplate.ott')
+  .apply(
+    table({
+      Table1: {
+        'string': { ... },
+        ...
+      }
+    })
+  )
+```

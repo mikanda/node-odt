@@ -6,6 +6,8 @@
 var odt = require('..')
   , path = require('path')
   , pipette = require('pipette')
+  , handler = require('../lib/handler')
+  , table = handler.table
   , join = path.join
   , Sink = pipette.Sink;
 require('should');
@@ -20,13 +22,13 @@ describe('Template', function(){
    * Loosy test for the api.  The real test was done interactively.
    */
 
-  describe('#apply', function(){
+  describe('values-handler', function(){
     it('should apply the given values to the template', function(done){
       odt
         .template(join(__dirname, '../examples/test-template.ott'))
         .on('error', done)
         .on('end', function(doc){
-          var estimatedSize = 10582
+          var estimatedSize = 10547
             , sink = new Sink(doc);
           doc.finalize(function (err, bytes) {
             if (err) done(err);
@@ -35,6 +37,28 @@ describe('Template', function(){
           sink.on('end', done);
         })
         .apply(require('../examples/values'));
+    });
+  });
+  describe('table-handler', function(){
+
+    /*!
+     * Loosy test for the api.  The real test was done interactively.
+     */
+
+    it('should apply the given table to the template', function(done){
+      odt
+        .template(join(__dirname, '../examples/table.ott'))
+        .on('error', done)
+        .on('end', function(doc){
+          var estimatedSize = 9681
+            , sink = new Sink(doc);
+          doc.finalize(function (err, bytes) {
+            if (err) done(err);
+            bytes.should.equal(estimatedSize);
+          });
+          sink.on('end', done);
+        })
+        .apply( table(require('../examples/table')) );
     });
   });
 });

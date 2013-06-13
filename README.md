@@ -69,9 +69,10 @@ For a more advanced example see the command line utility in `bin/node-odt`.
 
 ## API
 
-### `Template`
+### `Template(arg : String|Stream)`
 
-The main class to work with templates.  It inherits from `EventEmitter` and
+The main class to work with templates.  `arg` can be a path to the odt file or
+a stream with the odt contents.  `Template` inherits from `EventEmitter` and
 fires the following events:
 
 #### `events`

@@ -3,10 +3,12 @@
  * Module dependencies.
  */
 
-var odt = require('..')
+var fs = require('fs')
+  , odt = require('..')
   , path = require('path')
   , pipette = require('pipette')
   , handler = require('../lib/handler')
+  , createReadStream = fs.createReadStream
   , table = handler.table
   , join = path.join
   , Sink = pipette.Sink;
@@ -26,6 +28,23 @@ describe('Template', function(){
     it('should apply the given values to the template', function(done){
       odt
         .template(join(__dirname, '../examples/test-template.ott'))
+        .on('error', done)
+        .on('end', function(doc){
+          var estimatedSize = 10547
+            , sink = new Sink(doc);
+          doc.finalize(function (err, bytes) {
+            if (err) done(err);
+            bytes.should.equal(estimatedSize);
+          });
+          sink.on('end', done);
+        })
+        .apply(require('../examples/values'));
+    });
+    it('should apply the given values to the template using a stream', function(done){
+      var path = join(__dirname, '../examples/test-template.ott')
+        , stream = createReadStream(path);
+      odt
+        .template(stream)
         .on('error', done)
         .on('end', function(doc){
           var estimatedSize = 10547

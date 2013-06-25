@@ -65,16 +65,15 @@ describe('Template', function(){
      */
 
     it('should apply the given table to the template', function(done){
+      var estimatedSize = 9681;
       odt
         .template(join(__dirname, '../examples/table.ott'))
         .on('error', done)
+        .on('finalized', function(bytes){
+          bytes.should.equal(estimatedSize);
+        })
         .on('end', function(doc){
-          var estimatedSize = 9681
-            , sink = new Sink(doc);
-          doc.finalize(function (err, bytes) {
-            if (err) done(err);
-            bytes.should.equal(estimatedSize);
-          });
+          var sink = new Sink(doc);
           sink.on('end', done);
         })
         .apply( table(require('../examples/table')) );

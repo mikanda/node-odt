@@ -1,6 +1,6 @@
 {
   "name": "odt",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A node tool to work with OpenDocument text files.",
   "main": "index.js",
   "bin": {

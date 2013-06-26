@@ -87,8 +87,9 @@ form:
 
 ```js
 {
-  "field-type": {
-    "field-name": "field-value"
+  "field-name": {
+    "type": "field-type",
+    "value": "field-value"
   }
 }
 ```
@@ -97,9 +98,9 @@ e.g.
 
 ```js
 {
-  "string": {
-    "subject": "My subject",
-    ...
+  "subject": {
+    "type": "string",
+    "value": "My subject"
   },
   ...
 }
@@ -118,8 +119,8 @@ Pipes the archive to `stream`.
 
 #### `.finalize(done : Function)`
 
-Finalizes the output and calls `done(size)`. `size` is the size of the
-resulting document.
+Register a handler on the 'finalized' event.  This was formerly needed to
+launch the finalization of the archive.  But this is done automatically now.
 
 ## Bundled handlers
 

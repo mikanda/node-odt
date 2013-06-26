@@ -1,6 +1,4 @@
 {
-  "string": {
-    "subject": "Test subject",
-    "anotherfield": "Test another field"
-  }
+  "subject": { "type": "string", "value": "Test subject" },
+  "anotherfield": { "type": "string", "value": "Test another field" }
 }

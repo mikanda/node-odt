@@ -1,6 +1,12 @@
 {
   "Tabelle1": [
-    { "string": { "key": "Schlüssel 1", "value": "Wert 1" } },
-    { "string": { "key": "Schlüssel 2", "value": "Wert 2" } }
+    {
+      "key": { "type": "string", "value": "Schlüssel 1" },
+      "value": { "type": "string", "value": "Wert 1" }
+    },
+    {
+      "key": { "type": "string", "value": "Schlüssel 2" },
+      "value": { "type": "string", "value": "Wert 2" }
+    }
   ]
 }

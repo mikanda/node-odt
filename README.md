@@ -147,7 +147,7 @@ odt
   .apply(
     table({
       Table1: {
-        'string': { ... },
+        'subject': { ... },
         ...
       }
     })

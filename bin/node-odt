@@ -5,11 +5,13 @@
  */
 
 var fs = require('fs')
+  , path = require('path')
   , program = require('commander')
   , odt = require('..')
   , template = odt.template
   , readFile = fs.readFileSync
-  , createWriteStream = fs.createWriteStream;
+  , createWriteStream = fs.createWriteStream
+  , resolve = path.resolve;
 require('colors');
 
 // usage
@@ -52,10 +54,10 @@ var documentSize;
 var handlers = [];
 var values;
 if (program.table) {
-  values = JSON.parse(readFile(program.table));
+  values = require(resolve(process.cwd(), program.table));
   handlers.push(template.table(values));
 } else {
-  values = JSON.parse(readFile(program.values));
+  values = require(resolve(process.cwd(), program.values));
   handlers.push(template.values(values));
 }
 

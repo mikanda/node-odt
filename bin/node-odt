@@ -9,7 +9,6 @@ var fs = require('fs')
   , program = require('commander')
   , odt = require('..')
   , template = odt.template
-  , readFile = fs.readFileSync
   , createWriteStream = fs.createWriteStream
   , resolve = path.resolve;
 require('colors');

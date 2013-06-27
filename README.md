@@ -17,7 +17,9 @@ var fs = require('fs')
   , template = odt.template
   , createWriteStream = fs.createWriteStream
 var doc = 'mytemplate.ott';
-var values = { 'subject': 'My subject value' };
+var values = {
+  'subject': { type: 'string', value: 'My subject value' }
+};
 
 // apply values
 

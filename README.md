@@ -109,7 +109,7 @@ e.g.
 ##### Supported data types
 
 * `string` - This type is well supported and does what you think.
-* `date` - This type can be either a unix timestamp (`Number`) or a javascript
+* `date` - This type can be either an unix timestamp (`Number`) or a javascript
   `Date`.
 
 #### `.apply(handler : Function)`

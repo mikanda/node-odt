@@ -1,5 +1,6 @@
 
 # node-odt
+[![Build Status](https://travis-ci.org/domachine/node-odt.png?branch=master)](https://travis-ci.org/domachine/node-odt)
 
 A node js tool to work with OpenDocument text files.
 

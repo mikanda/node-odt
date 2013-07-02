@@ -115,6 +115,8 @@ e.g.
 * `string` - This type is well supported and does what you think.
 * `date` - This type can be either an unix timestamp (`Number`) or a javascript
   `Date`.
+* `cent` - This type should have an integer as value which is converted into a
+  float representing the `Euro` currency.
 
 #### `.apply(handler : Function)`
 

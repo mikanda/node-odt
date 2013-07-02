@@ -30,7 +30,7 @@ describe('Template', function(){
         .template(join(__dirname, '../examples/test-template.ott'))
         .on('error', done)
         .on('end', function(doc){
-          var estimatedSize = 11143
+          var estimatedSize = 11694
             , sink = new Sink(doc);
           doc.finalize(function (err, bytes) {
             if (err) done(err);
@@ -47,7 +47,7 @@ describe('Template', function(){
         .template(stream)
         .on('error', done)
         .on('end', function(doc){
-          var estimatedSize = 11143
+          var estimatedSize = 11694
             , sink = new Sink(doc);
           doc.finalize(function (err, bytes) {
             if (err) done(err);
